@@ -93,6 +93,21 @@ void ssd1306_fill(ssd1306_t *ssd, bool value) {
     }
 }
 
+void ssd1306_fill_region(ssd1306_t *ssd, uint8_t top, uint8_t left, uint8_t width, uint8_t height, uint8_t fill_percent) { // funcao do preenchimento grafico OLED
+  // Calcula quantas linhas (dentre a altura total) devem ser preenchidas.
+  // Por exemplo, se fill_percent for 50 e height for 60, então preenche 30 linhas.
+  uint8_t rows_to_fill = (fill_percent * height) / 100;
+  
+  //preencher de baixo para cima, inicia no final da área:
+  uint8_t start_row = top + height - rows_to_fill;
+  
+  for (uint8_t y = start_row; y < top + height; y++) {
+      for (uint8_t x = left; x < left + width; x++) {
+          ssd1306_pixel(ssd, x, y, true);
+      }
+  }
+}
+
 
 
 void ssd1306_rect(ssd1306_t *ssd, uint8_t top, uint8_t left, uint8_t width, uint8_t height, bool value, bool fill) {

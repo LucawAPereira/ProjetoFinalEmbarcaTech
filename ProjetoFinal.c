@@ -27,6 +27,7 @@ uint slice_b; // slice referente a porta conectada ao led rgb azul
 uint8_t led_r = 0; // Intensidade do vermelho
 uint8_t led_g = 0; // Intensidade do verde
 uint8_t led_b = 200; // Intensidade do azul
+bool quadradinho_pintado=false;
 bool cor=true; // referente ao display OLED
 bool ativacao_buzzer=true; // referente ao botaoB ativar/desativar o buzzer
 static volatile uint32_t last_time = 0;
@@ -97,36 +98,65 @@ int main()
         // pwm_set_gpio_level(LEDb,200);
         adc_select_input(0);
         uint16_t VRY_value = adc_read();
-        int conversao_porcentagem_y = (VRY_value*100)/3800; // escolhido o nivel "4000" para simular um nivel de agua maior que 100% e ativar o alerta_nivel_alto()
+        int conversao_porcentagem_y = (VRY_value*100)/3560; // escolhido o nivel "3560" para corrigir a leitura dos 50% joystick
+        int conversao_nivel_y = VRY_value*90/3560; // conversao para preenchimento simulando um nivel de agua
         char texto[4]; // Vetor para armazenar o caractere, necessario para desenhar para dentro do display
         sprintf(texto, "%d",conversao_porcentagem_y); // converte para caractere
         
-        if(conversao_porcentagem_y > 100){
-            ssd1306_draw_string(&ssd, texto, 56, 28); // o "texto" sera igual ao valor convertido porem em caractere
-            ssd1306_draw_string(&ssd, "A", 82, 28); // desenha o caracter de "%"
+        if(conversao_porcentagem_y > 100){ //if, haver com a posicao do caractere da porcentagem "%"
+            ssd1306_fill_region(&ssd, 1, 1, 38, 61, conversao_nivel_y);
+            ssd1306_draw_string(&ssd, "NIVEL: ", 64, 2);
+            ssd1306_draw_string(&ssd, "B1", 85, 39); 
+            ssd1306_draw_string(&ssd, "B2", 85, 53); 
+            ssd1306_rect(&ssd, 0, 0, 40, 63,cor,!cor);
+            ssd1306_rect(&ssd, 103, 70, 8, 8, 1,quadradinho_pintado); // quadradinho menor
+            ssd1306_rect(&ssd, 117, 70, 8, 8, 1,0 ); // quadradinho menor
+            ssd1306_draw_string(&ssd, texto, 71, 20); // o "texto" sera igual ao valor conversao_porcentagem_y porem em caractere
+            ssd1306_draw_string(&ssd, "F", 97, 20); // desenha o caracter de "%"
             ssd1306_send_data(&ssd); // Atualiza o display
             alerta_nivel_alto();
 
         }
         if (conversao_porcentagem_y==100){ //if, haver com a posicao do caractere da porcentagem "%"
-            ssd1306_draw_string(&ssd, texto, 56, 28); // o "texto" sera igual ao valor convertido porem em caractere
-            ssd1306_draw_string(&ssd, "A", 82, 28); // desenha o caracter de "%", caracter 'A' foi alterado para desenhar o "%"
+            ssd1306_fill_region(&ssd, 1, 1, 38, 61, conversao_nivel_y);
+            ssd1306_draw_string(&ssd, "NIVEL: ", 64, 2);
+            ssd1306_draw_string(&ssd, "B1", 85, 39); 
+            ssd1306_draw_string(&ssd, "B2", 85, 53); 
+            ssd1306_rect(&ssd, 0, 0, 40, 63,cor,!cor);
+            ssd1306_rect(&ssd, 103, 70, 8, 8, 1,quadradinho_pintado); // quadradinho menor
+            ssd1306_rect(&ssd, 117, 70, 8, 8, 1,0 ); // quadradinho menor
+            ssd1306_draw_string(&ssd, texto, 71, 20); // o "texto" sera igual ao valor convertido porem em caractere
+            ssd1306_draw_string(&ssd, "F", 97, 20); // desenha o caracter de "%", caracter 'F' foi alterado para desenhar o "%"
             ssd1306_send_data(&ssd); // Atualiza o display
             pwm_set_gpio_level(LEDb,0); // apaga o led quando a caixa estiver com volume de agua ok
             pwm_set_gpio_level(LEDr,0); // apaga o led quando a caixa estiver com volume de agua ok
 
         }
         if (conversao_porcentagem_y<100 && conversao_porcentagem_y>=10){ // if, haver com a posicao do caractere da porcentagem "%"
-            ssd1306_draw_string(&ssd, texto, 56, 28); 
-            ssd1306_draw_string(&ssd, "A", 73, 28); // alterado posicao
+            ssd1306_fill_region(&ssd, 1, 1, 38, 61, conversao_nivel_y);
+            ssd1306_draw_string(&ssd, "NIVEL: ", 64, 2);
+            ssd1306_draw_string(&ssd, "B1", 85, 39); 
+            ssd1306_draw_string(&ssd, "B2", 85, 53); 
+            ssd1306_rect(&ssd, 0, 0, 40, 63,cor,!cor);
+            ssd1306_rect(&ssd, 103, 70, 8, 8, 1,quadradinho_pintado); // quadradinho menor
+            ssd1306_rect(&ssd, 117, 70, 8, 8, 1,0 ); // quadradinho menor
+            ssd1306_draw_string(&ssd, texto, 73, 20); // valor de nivel em porcentagem
+            ssd1306_draw_string(&ssd, "F", 92, 20); // alterado posicao da "%"
             ssd1306_send_data(&ssd); 
             pwm_set_gpio_level(LEDb,0); // apaga o led quando a caixa estiver com volume de agua ok
             pwm_set_gpio_level(LEDr,0); // apaga o led quando a caixa estiver com volume de agua ok
 
         }
         if (conversao_porcentagem_y<10){ // if, haver com a posicao do caractere da porcentagem "%"
-            ssd1306_draw_string(&ssd, texto, 56, 28);
-            ssd1306_draw_string(&ssd, "A", 66, 28); // alterado posicao
+            ssd1306_fill_region(&ssd, 1, 1, 38, 61, conversao_nivel_y);
+            ssd1306_draw_string(&ssd, "NIVEL: ", 64, 2);
+            ssd1306_draw_string(&ssd, "B1", 85, 39); 
+            ssd1306_draw_string(&ssd, "B2", 85, 53); 
+            ssd1306_rect(&ssd, 0, 0, 40, 63,cor,!cor);
+            ssd1306_rect(&ssd, 103, 70, 8, 8, 1,quadradinho_pintado); // quadradinho menor
+            ssd1306_rect(&ssd, 117, 70, 8, 8, 1,0 ); // quadradinho menor
+            ssd1306_draw_string(&ssd, texto, 73, 20);
+            ssd1306_draw_string(&ssd, "F", 86, 20); // alterado posicao
             ssd1306_send_data(&ssd);
             alerta_nivel_baixo();
 
@@ -180,6 +210,7 @@ void alerta_nivel_alto()
 
 void gpio_irq_handler(uint gpio, uint32_t events)
 {
+
     uint32_t current_time = to_us_since_boot(get_absolute_time());
     if (current_time - last_time >= 350000){ // 350ms
 
@@ -190,6 +221,11 @@ void gpio_irq_handler(uint gpio, uint32_t events)
         }
         if(gpio == BotaoB){
             ativacao_buzzer = !ativacao_buzzer; // desativa/ativa os buzzers
+            if(ativacao_buzzer == 0){
+                quadradinho_pintado = 1;
+            } else{
+                quadradinho_pintado = 0;
+            }
         }
         if(gpio == BotaoJY){
     

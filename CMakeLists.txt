@@ -44,6 +44,10 @@ pico_set_program_version(ProjetoFinal "0.1")
 pico_enable_stdio_uart(ProjetoFinal 1)
 pico_enable_stdio_usb(ProjetoFinal 1)
 
+pico_generate_pio_header(ProjetoFinal ${CMAKE_CURRENT_LIST_DIR}/ws2812.pio)
+
+target_sources(ProjetoFinal PRIVATE ProjetoFinal.c)
+
 # Add the standard library to the build
 target_link_libraries(ProjetoFinal
         pico_stdlib
@@ -59,6 +63,7 @@ target_link_libraries(ProjetoFinal
 hardware_i2c
 hardware_pwm
 hardware_adc
+hardware_pio
         )
 
 pico_add_extra_outputs(ProjetoFinal)

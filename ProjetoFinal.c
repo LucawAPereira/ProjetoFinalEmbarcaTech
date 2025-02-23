@@ -5,7 +5,6 @@
 #include "inc/ssd1306.h"
 #include "hardware/adc.h"
 #include "pico/time.h"
-#include "hardware/clocks.h"
 #include "ws2812.pio.h"
 
 #define buzzer1 21 //Pino do buzzer 1
@@ -15,7 +14,7 @@
 #define BotaoB 6 // botao B da placa BitDogLab
 #define BotaoJY 22 // pino do botao joystick
 #define LEDr 13 // pino led rgb vermelho
-#define LEDb 12 // pino led rgb azul
+#define LEDg 11 // pino led rgb azul
 #define div 10    // referente ao pwm
 #define wrap 1000 // referente ao pwm
 #define endereco 0x3C // referente ao display OLED
@@ -34,7 +33,6 @@ bool quadradinho_pintado2=false;
 bool cor=true; // referente ao display OLED
 bool ativacao_buzzer=true; // referente ao botaoB ativar/desativar o buzzer
 bool ativar_matriz=false; // referente a ativacao da matriz 5x5
-bool controle1=false; // referente a ativacao da matriz 5x5
 static volatile uint32_t last_time = 0;
 int conversao_porcentagem_y=0;
 
@@ -99,30 +97,6 @@ static inline uint32_t urgb_u32(uint8_t r, uint8_t g, uint8_t b) //  protoclo WS
 }
 
 
-void set_one_led(uint8_t r, uint8_t g, uint8_t b, int buffer_index)  // funcao para desenhar na matriz 5x5
-{
-    bool* led_buffer[] = {led_buffer0, led_buffer1, led_buffer2, led_buffer3, led_buffer4}; // vetor desenho dos formatos
-
-    // Define a cor com base nos parâmetros fornecidos
-    uint32_t color = urgb_u32(r, g, b);
-    bool* buffer = led_buffer[buffer_index]; // armazena o array na variavel buffer, que será enviado para o vetor de 25 leds correspondente ao desenho 
-
-    // Define todos os LEDs com a cor especificada
-    
-        for (int i = 0; i < NUM_PIXELS; i++)
-        {
-        if (buffer[i])
-        {
-        put_pixel(color); // Liga o LED
-        }
-        else
-        {
-        put_pixel(0);  // Desliga o LED
-        }
-    }
-
-}
-
 int main()
 {
     stdio_init_all();
@@ -133,10 +107,10 @@ int main()
     ws2812_program_init(pio, sm, offset, WS2812_PIN, 800000, IS_RGBW);
 
     gpio_set_function(LEDr, GPIO_FUNC_PWM);
-    gpio_set_function(LEDb, GPIO_FUNC_PWM);
+    gpio_set_function(LEDg, GPIO_FUNC_PWM);
 
     slice_r = pwm_gpio_to_slice_num(LEDr);
-    slice_b = pwm_gpio_to_slice_num(LEDb);
+    slice_b = pwm_gpio_to_slice_num(LEDg);
 
     pwm_set_clkdiv(slice_r, div);
     pwm_set_wrap(slice_r, wrap);
@@ -221,7 +195,7 @@ int main()
             ssd1306_draw_string(&ssd, texto, 71, 20); // o "texto" sera igual ao valor convertido porem em caractere
             ssd1306_draw_string(&ssd, "F", 97, 20); // desenha o caracter de "%", caracter 'F' foi alterado para desenhar o "%"
             ssd1306_send_data(&ssd); // Atualiza o display
-            pwm_set_gpio_level(LEDb,0); // apaga o led quando a caixa estiver com volume de agua ok
+            pwm_set_gpio_level(LEDg,0); // apaga o led quando a caixa estiver com volume de agua ok
             pwm_set_gpio_level(LEDr,0); // apaga o led quando a caixa estiver com volume de agua ok
 
         }
@@ -239,7 +213,7 @@ int main()
             ssd1306_draw_string(&ssd, texto, 73, 20); // valor de nivel em porcentagem
             ssd1306_draw_string(&ssd, "F", 92, 20); // alterado posicao da "%"
             ssd1306_send_data(&ssd); 
-            pwm_set_gpio_level(LEDb,0); // apaga o led quando a caixa estiver com volume de agua ok
+            pwm_set_gpio_level(LEDg,0); // apaga o led quando a caixa estiver com volume de agua ok
             pwm_set_gpio_level(LEDr,0); // apaga o led quando a caixa estiver com volume de agua ok
   
         }
@@ -258,8 +232,7 @@ int main()
 
         }
 
-        printf("Nivel ADC_y: %d --> valor em porcentagem: %d%%\n", VRY_value, conversao_porcentagem_y); //- DEBUG
-        //sleep_ms(300);  
+        //printf("Nivel ADC_y: %d --> valor em porcentagem: %d%%\n", VRY_value, conversao_porcentagem_y); ---> DEBUG
 
     }
 }
@@ -300,7 +273,7 @@ void alerta_nivel_alto()
     play_note(200, 50, buzzer2);  
     play_note(300, 50, buzzer2);  // Oscilação do som
     } else {
-    pwm_set_gpio_level(LEDb,200); // indica que acionou o motor para tirar agua da caixa (led azul)
+    pwm_set_gpio_level(LEDg,200); // indica que acionou o motor para tirar agua da caixa (led azul)
     }
 }
 
@@ -366,7 +339,7 @@ void draw_composite_led_matrix(int nivel) { // funcao referente a atualizacao ma
             if (led_buffer1[i]) final_colors[i] = urgb_u32(20, 0, 0);   // 25% – vermelho
             if (led_buffer2[i]) final_colors[i] = urgb_u32(20, 0, 20);  // 50% – violeta
             if (led_buffer3[i]) final_colors[i] = urgb_u32(0, 0, 21);   // 75% – azul escuro
-            if (led_buffer4[i]) final_colors[i] = urgb_u32(21, 32, 36); // 100% – azul claro
+            if (led_buffer4[i]) final_colors[i] = urgb_u32(0, 20, 0); // 100% – verde
         }
     } else if (nivel > 75) {
         // Nível entre 75 e 100%: mostre até o estágio 75%

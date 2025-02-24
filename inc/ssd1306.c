@@ -108,6 +108,25 @@ void ssd1306_fill_region(ssd1306_t *ssd, uint8_t top, uint8_t left, uint8_t widt
   }
 }
 
+void ssd1306_draw_bitmap(ssd1306_t *ssd, const uint8_t *bitmap) {
+  for (int i = 0; i < ssd->bufsize - 1; i++) {
+      ssd->ram_buffer[i + 1] = bitmap[i];
+
+      ssd1306_send_data(ssd);
+  }
+}
+
+void ssd1306_init_bm(ssd1306_t *ssd, uint8_t width, uint8_t height, bool external_vcc, uint8_t address, i2c_inst_t *i2c) {
+  ssd->width = width;
+  ssd->height = height;
+  ssd->pages = height / 8U;
+  ssd->address = address;
+  ssd->i2c_port = i2c;
+  ssd->bufsize = ssd->pages * ssd->width + 1;
+  ssd->ram_buffer = calloc(ssd->bufsize, sizeof(uint8_t));
+  ssd->ram_buffer[0] = 0x40;
+  ssd->port_buffer[0] = 0x80;
+}
 
 
 void ssd1306_rect(ssd1306_t *ssd, uint8_t top, uint8_t left, uint8_t width, uint8_t height, bool value, bool fill) {

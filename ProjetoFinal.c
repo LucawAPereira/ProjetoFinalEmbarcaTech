@@ -245,7 +245,7 @@ int main()
     ssd1306_draw_string(&ssd, "porJ", 90, 10); // "j" representa o caracter ":"
     ssd1306_draw_string(&ssd, "Lucas A Pereira ", 0, 40);
     ssd1306_send_data(&ssd);
-    sleep_ms(4000);
+    sleep_ms(3000);
     boasvindas=false;
         }
         

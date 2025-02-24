@@ -241,11 +241,11 @@ int main()
     ssd1306_draw_bitmap(&ssd_bm, bitmap_128x64);
 
     sleep_ms(5000);
-    //ssd1306_fill(&ssd, !cor); // Limpa o display
-    ssd1306_draw_string(&ssd, "Por: ", 50, 2);
-    ssd1306_draw_string(&ssd, "Lucas Almeida Pereira ", 20, 15);
+    ssd1306_draw_string(&ssd, "Desenvolvido", 0, 0);
+    ssd1306_draw_string(&ssd, "porJ", 90, 10); // "j" representa o caracter ":"
+    ssd1306_draw_string(&ssd, "Lucas A Pereira ", 0, 40);
     ssd1306_send_data(&ssd);
-    sleep_ms(3000);
+    sleep_ms(4000);
     boasvindas=false;
         }
         

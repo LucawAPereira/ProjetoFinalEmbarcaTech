@@ -8,15 +8,15 @@
 
     Funcionalidades principais:
       - Leitura analógica do "Joystick" para simulação do sensor ultrassônico.
-      - Conversão dos valores lidos do Joystick, em níveis da água (em porcentagem, 0% a 100%).
-      - Exibição dos níveis em tempo real no display OLED
-      - Emissão de alertas sonoros através de buzzers para níveis críticos (baixo e alto).
-      - "Botao A" ativa/desativa a exibição dos níveis em tempo real na matriz de LEDs 5x5 RGB.
-      - "Botao B" ativa/desativa os motores automáticos (enchimento e drenagem), simbolizados pelos Leds verde e vermelho, além de ativar/desativar os buzzers
-      - Acionamento automático dos motores:
-            * Motor de enchimento: ativado quando o nível está abaixo de 10%.
-            * Motor de drenagem: ativado quando o nível ultrapassa 100%.
+      - Conversão dos valores lidos do Joystick.
+      - Exibição dos níveis analógicos em tempo real no display OLED (gráfica e percentual).
       - Controle e interação via botões da placa BitDogLab para ativação/desativação de funções.
+      - Emissão de alertas sonoros através de buzzers para níveis críticos (abaixo de 10% e acima de 100%).
+      - "Botao A" ativa/desativa a exibição dos níveis em tempo real na matriz de LEDs 5x5 RGB.
+      - "Botao B" ativa/desativa os motores automáticos (enchimento e drenagem), simbolizados pelos Leds vermelho e verde, além de ativar/desativar os buzzers
+      - Acionamento automático dos motores:
+            * Motor de enchimento: ativado quando o nível está abaixo de 10%. (Led VERMELHO)
+            * Motor de drenagem: ativado quando o nível ultrapassa 100%. (Led VERDE)
 
     O software demonstra uma solução prática e de baixo custo para o monitoramento e controle
     inteligente de reservatórios de água, integrando tecnologias de sistemas embarcados e IoT.

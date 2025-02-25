@@ -236,9 +236,9 @@ int main()
     };
 
     ssd1306_t ssd_bm;
-    ssd1306_init_bm(&ssd_bm, 128, 64, false, 0x3C, i2c1);
+    ssd1306_init_bm(&ssd_bm, 128, 64, false, 0x3C, i2c1); 
     ssd1306_config(&ssd_bm);
-    ssd1306_draw_bitmap(&ssd_bm, bitmap_128x64);
+    ssd1306_draw_bitmap(&ssd_bm, bitmap_128x64); // comeca a desenhar a logo
 
     sleep_ms(5000);
     ssd1306_draw_string(&ssd, "Desenvolvido", 0, 0);

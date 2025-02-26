@@ -22,5 +22,5 @@ Projeto referente a atividade final do curso do EmbarcaTech - por Lucas A. Perei
 
 3- Joystick: Serve para simular o nível de água no reservatório, seu valor irá atualizar de forma gráfica e em porcentagem no display OLED e também atualizar de forma gráfica na matriz de leds 5x5 RGB.
 
-# Link do vídeo demonstando seu funcionamento
+# Link do vídeo demonstando o funcionamento
 Link: 
